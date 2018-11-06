@@ -9,11 +9,11 @@ namespace Levent.Demo
         static void Main(string[] args)
         {
             Console.WriteLine("1. kullanıcı adı giriniz");
-            string username1 = Console.ReadLine();
+            string username1 = Console.ReadLine().ToUpper();
             Console.WriteLine("user1 = " + username1);
 
             Console.WriteLine("2. kullanıcı adı giriniz");
-            string username2 = Console.ReadLine();
+            string username2 = Console.ReadLine().ToUpper();
             Console.WriteLine("user1 = " + username2);
 
             Console.WriteLine("boyut giriniz");
@@ -26,7 +26,7 @@ namespace Levent.Demo
 
             do
             {
-                Console.WriteLine("Enter a letter");
+                Console.WriteLine($"{game1.TurnOwner.Username} => Enter a letter");
                 char letter_ = char.ToUpper(Convert.ToChar(Console.ReadLine()));
 
                 Console.WriteLine("Enter x dimention");
@@ -43,9 +43,9 @@ namespace Levent.Demo
                 {
                     Console.WriteLine("GRİD");
                 }
-                if(!continueOrViewGrid.Equals("*"))
+                if (!continueOrViewGrid.Equals("*"))
                 {
-                    Console.WriteLine($"You have to use this letter {letter_}");
+                    Console.WriteLine($"{game1.GetOpponent().Username} => You have to use this letter {letter_}");
                     Console.WriteLine("Enter x dimention");
                     int opponentDimentionx = Convert.ToInt32(Console.ReadLine());
 
@@ -53,46 +53,23 @@ namespace Levent.Demo
                     int opponentDimentiony = Convert.ToInt32(Console.ReadLine());
 
                     game1.PlayOpponentLetter(opponentDimentionx, opponentDimentiony);
-
-                    // gridin dolluluğunu kontrol et ve her seferde tutulan sayıyı rttırıp eşitle 
-                    //return true = game over, return false= continue
                 }
 
                 gameIsOver = game1.GameIsOver();
 
-            } while (gameIsOver);
+            } while (!gameIsOver);
 
-
-            ////turn 1
-            //game1.Play('a', 0, 0);//b
-            //game1.PlayOpponentLetter(0, 0);//o
-
-            ////turn 2
-            //game1.Play('b', 0, 1);//o
-            //game1.PlayOpponentLetter(0, 1);//b
-
-            ////turn 3
-            //game1.Play('a', 0, 2);//b
-            //game1.PlayOpponentLetter(0, 2);//o
-
-            ////turn 4
-            //game1.Play('b', 0, 3);//o
-            //game1.PlayOpponentLetter(0, 3);//b
-
-            Result result = game1.GetResult();
-            if (result != null)
-            {
-                Console.WriteLine("Game over");
-                Console.WriteLine($"Winner is {result.Winner}");
-            }
-
-            ////turn 5
-            //game1.Play('a', 2, 0);
-            //game1.PlayOpponentLetter(1, 2);
-
-            ////turn 6
-            //game1.Play('b', 1, 3);
-            //game1.PlayOpponentLetter(1, 3);
+            game1.GetResult(game1.User1);
+            Console.WriteLine("===============================================");
+            game1.GetResult(game1.User2);
+            
+            //Result result = game1.GetResult();
+            //if (result != null)
+            //{
+            //    Console.WriteLine("Game over");
+            //    Console.WriteLine($"Winner is {result.Winner}");
+            //}
+            
             Console.ReadLine();
         }
     }
@@ -100,6 +77,7 @@ namespace Levent.Demo
     internal class Game
     {
         private static readonly Dictionary<char, int> LettersPoints = new Dictionary<char, int>();
+        private static List<string> Words = new List<string>();
         public User User1 { get; set; }
         public User User2 { get; set; }
         public User TurnOwner { get; set; }
@@ -114,6 +92,7 @@ namespace Levent.Demo
             TurnOwner = User1;
 
             Load();
+            LoadWords();
         }
 
         internal void Play(char letter, int x, int y)
@@ -178,14 +157,16 @@ namespace Levent.Demo
             {
                 for (int j = 0; j < User1.Grid.GetLength(1); j++)
                 {
-                    if (User1.Grid[i,j] != '\0')
+                    if (User1.Grid[i, j] != '\0')
                     {
                         grid++;
                     }
                 }
             }
 
-            if (grid == User1.Grid.GetLength(0)*User1.Grid.GetLength(1))
+            Console.WriteLine($"Not Empty Grid : {grid}");
+
+            if (grid == User1.Grid.GetLength(0) * User1.Grid.GetLength(1))
             {
                 return true;
             }
@@ -266,6 +247,15 @@ namespace Levent.Demo
             LettersPoints.Add('Z', 4);
         }
 
+        private void LoadWords()
+        {
+            Words.Add("ALİ");
+            Words.Add("EV");
+            Words.Add("KAT");
+            Words.Add("YAT");
+            Words.Add("AD");
+        }
+
         private void SetTurnOwner()
         {
             var opponent = GetOpponent();
@@ -284,9 +274,48 @@ namespace Levent.Demo
             }
         }
 
-        internal Result GetResult()
+        internal void GetResult(User user)
         {
-            return null;
+            Console.WriteLine("SHOW RESULT");
+            string word = "";
+            List<string> meaningfulwords = new List<string>();
+
+            for (int i = 0; i < user.Grid.GetLength(0); i++)
+            {
+                for (int j = 0 ; j < user.Grid.GetLength(1); j++)
+                {
+                    char c = user.Grid[i, j];
+                    word += c.ToString();
+
+                    if (Words.Contains(word))
+                    {
+                        meaningfulwords.Add(word);
+                    }
+                }
+
+                word = "";
+            }
+            
+            for (int i = 0; i < user.Grid.GetLength(0); i++)
+            {
+                for (int j = 0; j < user.Grid.GetLength(1); j++)
+                {
+                    char c = user.Grid[j, i];
+                    word += c.ToString();
+
+                    if (Words.Contains(word))
+                    {
+                        meaningfulwords.Add(word);
+                    }                    
+                }
+
+                word = "";
+            }
+
+
+            user.MeaningfulWords = meaningfulwords;
+
+            user.MeaningfulWords.ForEach(Console.WriteLine); 
         }
     }
 
@@ -294,15 +323,18 @@ namespace Levent.Demo
     {
         public string Username { get; set; }
         public char[,] Grid { get; set; }
+        public List<string> MeaningfulWords { get; set; }
         public User(string user1Name, int x, int y)
         {
             this.Username = user1Name;
             this.Grid = new char[x, y];
+            this.MeaningfulWords = MeaningfulWords;
         }
     }
 
     internal class Result
     {
         public User Winner { get; set; }
+        
     }
 }
