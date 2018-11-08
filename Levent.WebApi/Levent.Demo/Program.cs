@@ -369,44 +369,40 @@ namespace Levent.Demo
 
         internal Result GetResult()
         {
+            UserResult userResult1 = new UserResult();
+            UserResult userResult2 = new UserResult();
+
             Result result = new Result();
-            
-            UserResult winner;
-            UserResult loser;
 
-            UserResult userResult1 = GetScore(User1);
-            UserResult userResult2 = GetScore(User2);
+            userResult1.MeaningfulWords = GetMeaningfulWords(User1.Grid);
+            userResult2.MeaningfulWords = GetMeaningfulWords(User2.Grid);
 
-            if (userResult1.Score > userResult2.Score)
+            userResult1.Score = GetScore(userResult1.MeaningfulWords);
+            userResult2.Score = GetScore(userResult2.MeaningfulWords);
+
+            if (userResult1.Score >= userResult2.Score)
             {
                 result.Winner = userResult1;
                 result.Loser = userResult2;
             }
-            else if (userResult1.Score < userResult2.Score)
+            else
             {
                 result.Winner = userResult2;
                 result.Loser = userResult1;
             }
-            else
-            {
-                winner = null;
-                loser = null;
-            }
-            
+
             return result;
         }
 
-        internal UserResult GetScore(User user)
+        internal int GetScore(List<string> meaningfulWords)
         {
-            UserResult userResult = GetMeaningfulWords(user);
-            
             List<char> meaningfulLetter = new List<char>();
 
-            for (int i = 0; i < userResult.MeaningfulWords.Count; i++)
+            for (int i = 0; i < meaningfulWords.Count; i++)
             {
-                for (int j = 0; j < userResult.MeaningfulWords[i].Length; j++)
+                for (int j = 0; j < meaningfulWords[i].Length; j++)
                 {
-                    meaningfulLetter.Add(userResult.MeaningfulWords[i][j]);
+                    meaningfulLetter.Add(meaningfulWords[i][j]);
                 }
             }
             int playerScore = 0;
@@ -418,22 +414,21 @@ namespace Levent.Demo
                     playerScore += LettersPoints[meaningfulLetter[i]];
                 }
             }
-            userResult.Score = playerScore;
 
-            return userResult;
+            return playerScore;
         }
 
-        private UserResult GetMeaningfulWords(User user)
+        private List<string> GetMeaningfulWords(char[,] grid)
         {
             UserResult userResult = new UserResult();
             string word = "";
             List<string> meaningfulwords = new List<string>();
 
-            for (int i = 0; i < user.Grid.GetLength(0); i++)
+            for (int i = 0; i < grid.GetLength(0); i++)
             {
-                for (int j = 0; j < user.Grid.GetLength(1); j++)
+                for (int j = 0; j < grid.GetLength(1); j++)
                 {
-                    char c = user.Grid[i, j];
+                    char c = grid[i, j];
                     word += c.ToString();
 
                     if (Words.Contains(word))
@@ -445,11 +440,11 @@ namespace Levent.Demo
                 word = "";
             }
 
-            for (int i = 0; i < user.Grid.GetLength(0); i++)
+            for (int i = 0; i < grid.GetLength(0); i++)
             {
-                for (int j = 0; j < user.Grid.GetLength(1); j++)
+                for (int j = 0; j < grid.GetLength(1); j++)
                 {
-                    char c = user.Grid[j, i];
+                    char c = grid[j, i];
                     word += c.ToString();
 
                     if (Words.Contains(word))
@@ -460,10 +455,8 @@ namespace Levent.Demo
 
                 word = "";
             }
-            userResult.User = user;
-            userResult.MeaningfulWords = meaningfulwords;
 
-            return userResult;
+            return meaningfulwords;
         }
     }
 
