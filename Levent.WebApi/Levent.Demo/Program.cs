@@ -8,6 +8,7 @@ namespace Levent.Demo
     {
         static void Main(string[] args)
         {
+            // Kullanıcı girişleri
             Console.WriteLine("1. kullanıcı adı giriniz");
             string username1 = Console.ReadLine().ToUpper();
             Console.WriteLine("user1 = " + username1);
@@ -16,60 +17,146 @@ namespace Levent.Demo
             string username2 = Console.ReadLine().ToUpper();
             Console.WriteLine("user1 = " + username2);
 
-            Console.WriteLine("boyut giriniz");
-            int dimention = Convert.ToInt32(Console.ReadLine());
+            int dimention = 0;
+
+            // Boyut kontrolü
+            while (true)
+            {
+                if (dimention == 0)
+                {
+                    Console.WriteLine("boyut giriniz");
+                    dimention = Convert.ToInt32(Console.ReadLine());
+                }
+                else if (dimention < 2)
+                {
+                    Console.WriteLine(" Daha büyük boyut giriniz");
+                    dimention = Convert.ToInt32(Console.ReadLine());
+                }
+                else
+                {
+                    break;
+                }
+            }
+
             Console.WriteLine("dimention = " + dimention + "x" + dimention);
 
+            // Oyun oluşturma
             var game1 = new Game(username1, username2, dimention, dimention);
 
             bool gameIsOver;
+            var playingException = ExceptionType.None;
 
             do
             {
-                Console.WriteLine($"{game1.TurnOwner.Username} => Enter a letter");
-                char letter_ = char.ToUpper(Convert.ToChar(Console.ReadLine()));
+                char letter = char.MinValue;
+                int dimentionx = -1;
+                int dimentiony = -1;
+                int opponentDimentionx = -1;
+                int opponentDimentiony = -1;
 
-                Console.WriteLine("Enter x dimention");
-                int dimentionx = Convert.ToInt32(Console.ReadLine());
+                // Play
+                do
+                {
+                    if (playingException == ExceptionType.None || playingException == ExceptionType.Letter)
+                    {
+                        Console.WriteLine($"{game1.TurnOwner.Username} => Enter a letter");
+                        letter = char.ToUpper(Convert.ToChar(Console.ReadLine()));
+                    }
 
-                Console.WriteLine("Enter y dimention");
-                int dimentiony = Convert.ToInt32(Console.ReadLine());
+                    if (playingException == ExceptionType.None || playingException == ExceptionType.Dimension)
+                    {
+                        Console.WriteLine("Enter x dimention");
+                        dimentionx = Convert.ToInt32(Console.ReadLine());
 
-                game1.Play(letter_, dimentionx, dimentiony);
+                        Console.WriteLine("Enter y dimention");
+                        dimentiony = Convert.ToInt32(Console.ReadLine());
+                    }
+
+                    try
+                    {
+                        game1.Play(letter, dimentionx, dimentiony);
+                        playingException = ExceptionType.None;
+                    }
+                    catch (IncorrectLetterException exc)
+                    {
+                        playingException = ExceptionType.Letter;
+                        Console.WriteLine(exc.Message);
+                    }
+                    catch (GridCellException exc)
+                    {
+                        playingException = ExceptionType.Dimension;
+                        Console.WriteLine(exc.Message);
+                    }
+
+                } while (playingException != ExceptionType.None);
+
+                // Grid Gösterme
                 Console.WriteLine("Enter * to view your grid");
+
                 string continueOrViewGrid = Console.ReadLine();
 
                 if (continueOrViewGrid.Equals("*"))
                 {
                     Console.WriteLine("GRİD");
                 }
+
+                // PlayOpponent
                 if (!continueOrViewGrid.Equals("*"))
                 {
-                    Console.WriteLine($"{game1.GetOpponent().Username} => You have to use this letter {letter_}");
-                    Console.WriteLine("Enter x dimention");
-                    int opponentDimentionx = Convert.ToInt32(Console.ReadLine());
+                    do
+                    {
+                        if (playingException == ExceptionType.None)
+                        {
+                            Console.WriteLine($"{game1.GetOpponent().Username} => You have to use this letter {letter}");
+                        }
 
-                    Console.WriteLine("Enter y dimention");
-                    int opponentDimentiony = Convert.ToInt32(Console.ReadLine());
+                        if (playingException == ExceptionType.None || playingException == ExceptionType.Dimension)
+                        {
+                            Console.WriteLine("Enter x dimention");
+                            opponentDimentionx = Convert.ToInt32(Console.ReadLine());
 
-                    game1.PlayOpponentLetter(opponentDimentionx, opponentDimentiony);
+                            Console.WriteLine("Enter y dimention");
+                            opponentDimentiony = Convert.ToInt32(Console.ReadLine());
+                        }
+
+                        try
+                        {
+                            game1.PlayOpponentLetter(opponentDimentionx, opponentDimentiony);
+                            playingException = ExceptionType.None;
+                        }
+                        catch (GridCellException e)
+                        {
+                            playingException = ExceptionType.Dimension;
+                            Console.WriteLine(e.Message);
+                        }
+                        catch (IncorrectLetterException e)
+                        {
+                            playingException = ExceptionType.Letter;
+                            Console.WriteLine(e.Message);
+                        }
+
+                    } while (playingException != ExceptionType.None);
                 }
 
                 gameIsOver = game1.GameIsOver();
 
             } while (!gameIsOver);
 
-            game1.GetResult(game1.User1);
-            Console.WriteLine("===============================================");
-            game1.GetResult(game1.User2);
-            
-            //Result result = game1.GetResult();
-            //if (result != null)
-            //{
-            //    Console.WriteLine("Game over");
-            //    Console.WriteLine($"Winner is {result.Winner}");
-            //}
-            
+            Result result = game1.GetResult();
+            if (result != null)
+            {
+                Console.WriteLine("Game over");
+                Console.WriteLine($"Winner is {result.Winner.User.Username}");
+                Console.WriteLine($"Winner's score = {result.Winner.Score}");
+                Console.WriteLine("Winner's meaningful words =");
+                result.Winner.MeaningfulWords.ForEach(Console.WriteLine);
+                Console.WriteLine("===============================================");
+                Console.WriteLine($"Opponent is {result.Loser.User.Username}");
+                Console.WriteLine($"Opponent's score = {result.Loser.Score}");
+                Console.WriteLine("Winner's meaningful words =");
+                result.Loser.MeaningfulWords.ForEach(Console.WriteLine);
+            }
+
             Console.ReadLine();
         }
     }
@@ -105,19 +192,19 @@ namespace Levent.Demo
             var outOfSize = IsOutOfSize(TurnOwner, x, y);
             if (!outOfSize)
             {
-                throw new Exception("Your dimentions are out of size!");
-            }
-
-            var correctLetter = IsLetterCorrect(char.ToUpper(letter));
-            if (!correctLetter)
-            {
-                throw new Exception("You used a letter that is not in the alphabet");
+                throw new GridCellException($"Your dimentions are out of size! Dimentions: ({x},{y})");
             }
 
             var empty = IsCellEmpty(TurnOwner, x, y);
             if (!empty)
             {
-                throw new Exception("Cell is not empty!");
+                throw new GridCellException($"Cell is not empty! Dimentions: ({x},{y})");
+            }
+            letter = char.ToUpper(letter);
+            var correctLetter = IsLetterCorrect(letter);
+            if (!correctLetter)
+            {
+                throw new IncorrectLetterException($"You used a letter that is not in the alphabet { letter }");
             }
 
             lastPlayedLetter = letter;
@@ -135,13 +222,13 @@ namespace Levent.Demo
             var outOfSize = IsOutOfSize(opponent, x, y);
             if (!outOfSize)
             {
-                throw new Exception("Your dimentions are out of size!");
+                throw new GridCellException($"Your dimentions are out of size! Dimentions: ({x},{y})");
             }
 
             var empty = IsCellEmpty(opponent, x, y);
             if (!empty)
             {
-                throw new Exception("Cell is not empty!");
+                throw new GridCellException($"Cell is not empty! Dimentions: ({x},{y})");
             }
 
             opponent.Grid[x, y] = lastPlayedLetter;
@@ -191,7 +278,8 @@ namespace Levent.Demo
 
         internal bool IsLetterCorrect(char letter)
         {
-            if (LettersPoints.ContainsKey(char.ToUpper(letter)))
+            letter = char.ToUpper(letter);
+            if (LettersPoints.ContainsKey(letter))
             {
                 return true;
             }
@@ -249,11 +337,16 @@ namespace Levent.Demo
 
         private void LoadWords()
         {
+            Words.Add("AL");
+            Words.Add("AY");
             Words.Add("ALİ");
-            Words.Add("EV");
-            Words.Add("KAT");
-            Words.Add("YAT");
-            Words.Add("AD");
+            Words.Add("YAY");
+            Words.Add("ALA");
+            Words.Add("LAL");
+            Words.Add("AYAK");
+            Words.Add("GEZİ");
+            Words.Add("KİRA");
+            Words.Add("AZRA");
         }
 
         private void SetTurnOwner()
@@ -274,15 +367,71 @@ namespace Levent.Demo
             }
         }
 
-        internal void GetResult(User user)
+        internal Result GetResult()
         {
-            Console.WriteLine("SHOW RESULT");
+            Result result = new Result();
+            
+            UserResult winner;
+            UserResult loser;
+
+            UserResult userResult1 = GetScore(User1);
+            UserResult userResult2 = GetScore(User2);
+
+            if (userResult1.Score > userResult2.Score)
+            {
+                result.Winner = userResult1;
+                result.Loser = userResult2;
+            }
+            else if (userResult1.Score < userResult2.Score)
+            {
+                result.Winner = userResult2;
+                result.Loser = userResult1;
+            }
+            else
+            {
+                winner = null;
+                loser = null;
+            }
+            
+            return result;
+        }
+
+        internal UserResult GetScore(User user)
+        {
+            UserResult userResult = GetMeaningfulWords(user);
+            
+            List<char> meaningfulLetter = new List<char>();
+
+            for (int i = 0; i < userResult.MeaningfulWords.Count; i++)
+            {
+                for (int j = 0; j < userResult.MeaningfulWords[i].Length; j++)
+                {
+                    meaningfulLetter.Add(userResult.MeaningfulWords[i][j]);
+                }
+            }
+            int playerScore = 0;
+
+            for (int i = 0; i < meaningfulLetter.Count; i++)
+            {
+                if (LettersPoints.ContainsKey(meaningfulLetter[i]))
+                {
+                    playerScore += LettersPoints[meaningfulLetter[i]];
+                }
+            }
+            userResult.Score = playerScore;
+
+            return userResult;
+        }
+
+        private UserResult GetMeaningfulWords(User user)
+        {
+            UserResult userResult = new UserResult();
             string word = "";
             List<string> meaningfulwords = new List<string>();
 
             for (int i = 0; i < user.Grid.GetLength(0); i++)
             {
-                for (int j = 0 ; j < user.Grid.GetLength(1); j++)
+                for (int j = 0; j < user.Grid.GetLength(1); j++)
                 {
                     char c = user.Grid[i, j];
                     word += c.ToString();
@@ -295,7 +444,7 @@ namespace Levent.Demo
 
                 word = "";
             }
-            
+
             for (int i = 0; i < user.Grid.GetLength(0); i++)
             {
                 for (int j = 0; j < user.Grid.GetLength(1); j++)
@@ -306,35 +455,62 @@ namespace Levent.Demo
                     if (Words.Contains(word))
                     {
                         meaningfulwords.Add(word);
-                    }                    
+                    }
                 }
 
                 word = "";
             }
+            userResult.User = user;
+            userResult.MeaningfulWords = meaningfulwords;
 
-
-            user.MeaningfulWords = meaningfulwords;
-
-            user.MeaningfulWords.ForEach(Console.WriteLine); 
+            return userResult;
         }
+    }
+
+    enum ExceptionType
+    {
+        None = 0,
+        Dimension = 1,
+        Letter = 2
     }
 
     internal class User
     {
         public string Username { get; set; }
         public char[,] Grid { get; set; }
-        public List<string> MeaningfulWords { get; set; }
         public User(string user1Name, int x, int y)
         {
             this.Username = user1Name;
             this.Grid = new char[x, y];
-            this.MeaningfulWords = MeaningfulWords;
         }
+    }
+    internal class UserResult
+    {
+        public User User { get; set; }
+        public List<string> MeaningfulWords { get; set; }
+        public int Score { get; set; }
     }
 
     internal class Result
     {
-        public User Winner { get; set; }
-        
+        public UserResult Winner { get; set; }
+        public UserResult Loser { get; set; }
+
+    }
+
+    internal class GridCellException : Exception
+    {
+        internal GridCellException(string message) : base(message)
+        {
+
+        }
+    }
+
+    internal class IncorrectLetterException : Exception
+    {
+        internal IncorrectLetterException(string message) : base(message)
+        {
+
+        }
     }
 }
