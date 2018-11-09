@@ -17,43 +17,40 @@ namespace Levent.Demo
             string username2 = Console.ReadLine().ToUpper();
             Console.WriteLine("user1 = " + username2);
 
-            int dimention = 0;
-
-            // Boyut kontrolü
-            while (true)
-            {
-                if (dimention == 0)
-                {
-                    Console.WriteLine("boyut giriniz");
-                    dimention = Convert.ToInt32(Console.ReadLine());
-                }
-                else if (dimention < 2)
-                {
-                    Console.WriteLine(" Daha büyük boyut giriniz");
-                    dimention = Convert.ToInt32(Console.ReadLine());
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            Console.WriteLine("dimention = " + dimention + "x" + dimention);
-
-            // Oyun oluşturma
-            var game1 = new Game(username1, username2, dimention, dimention);
-
+            int dimension = 0;
             bool gameIsOver;
             var playingException = ExceptionType.None;
+            Game game1 = null;
+
+            bool dimensionLoop = true;
+            do
+            {
+                if (dimensionLoop)
+                {
+                    Console.WriteLine("boyut giriniz");
+                    dimension = Convert.ToInt32(Console.ReadLine());
+                }
+
+                try
+                {
+                    game1 = new Game(username1, username2, dimension, dimension);
+                    dimensionLoop = false;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            } while (dimensionLoop);
+
+            // Oyun oluşturma
 
             do
             {
                 char letter = char.MinValue;
-                int dimentionx = -1;
-                int dimentiony = -1;
-                int opponentDimentionx = -1;
-                int opponentDimentiony = -1;
-
+                int dimensionx = -1;
+                int dimensiony = -1;
+                int opponentDimensionx = -1;
+                int opponentDimensiony = -1;
                 // Play
                 do
                 {
@@ -65,16 +62,16 @@ namespace Levent.Demo
 
                     if (playingException == ExceptionType.None || playingException == ExceptionType.Dimension)
                     {
-                        Console.WriteLine("Enter x dimention");
-                        dimentionx = Convert.ToInt32(Console.ReadLine());
+                        Console.WriteLine("Enter x dimension");
+                        dimensionx = Convert.ToInt32(Console.ReadLine());
 
-                        Console.WriteLine("Enter y dimention");
-                        dimentiony = Convert.ToInt32(Console.ReadLine());
+                        Console.WriteLine("Enter y dimension");
+                        dimensiony = Convert.ToInt32(Console.ReadLine());
                     }
 
                     try
                     {
-                        game1.Play(letter, dimentionx, dimentiony);
+                        game1.Play(letter, dimensionx, dimensiony);
                         playingException = ExceptionType.None;
                     }
                     catch (IncorrectLetterException exc)
@@ -97,7 +94,8 @@ namespace Levent.Demo
 
                 if (continueOrViewGrid.Equals("*"))
                 {
-                    Console.WriteLine("GRİD");
+                    game1.ShowGrid(game1.TurnOwner.Grid);
+                    continueOrViewGrid = "";
                 }
 
                 // PlayOpponent
@@ -112,16 +110,16 @@ namespace Levent.Demo
 
                         if (playingException == ExceptionType.None || playingException == ExceptionType.Dimension)
                         {
-                            Console.WriteLine("Enter x dimention");
-                            opponentDimentionx = Convert.ToInt32(Console.ReadLine());
+                            Console.WriteLine("Enter x dimension");
+                            opponentDimensionx = Convert.ToInt32(Console.ReadLine());
 
-                            Console.WriteLine("Enter y dimention");
-                            opponentDimentiony = Convert.ToInt32(Console.ReadLine());
+                            Console.WriteLine("Enter y dimension");
+                            opponentDimensiony = Convert.ToInt32(Console.ReadLine());
                         }
 
                         try
                         {
-                            game1.PlayOpponentLetter(opponentDimentionx, opponentDimentiony);
+                            game1.PlayOpponentLetter(opponentDimensionx, opponentDimensiony);
                             playingException = ExceptionType.None;
                         }
                         catch (GridCellException e)
@@ -173,13 +171,24 @@ namespace Levent.Demo
 
         public Game(string user1Name, string user2Name, int x, int y)
         {
+            var inValidDimension = InvalidDimension(x, y);
+            if (inValidDimension)
+            {
+                throw new InvalidDimensionException($"Your dimension is invalid!");
+            }
+
             User1 = new User(user1Name, x, y);
             User2 = new User(user2Name, x, y);
 
             TurnOwner = User1;
 
-            Load();
+            LoadLetters();
             LoadWords();
+        }
+
+        internal bool InvalidDimension(int dimensionx, int dimensiony)
+        {
+            return !(dimensionx >= 2 && dimensiony >= 2);
         }
 
         internal void Play(char letter, int x, int y)
@@ -192,13 +201,13 @@ namespace Levent.Demo
             var outOfSize = IsOutOfSize(TurnOwner, x, y);
             if (!outOfSize)
             {
-                throw new GridCellException($"Your dimentions are out of size! Dimentions: ({x},{y})");
+                throw new GridCellException($"Your dimensions are out of size! Dimensions: ({x},{y})");
             }
 
             var empty = IsCellEmpty(TurnOwner, x, y);
             if (!empty)
             {
-                throw new GridCellException($"Cell is not empty! Dimentions: ({x},{y})");
+                throw new GridCellException($"Cell is not empty! Dimensions: ({x},{y})");
             }
             letter = char.ToUpper(letter);
             var correctLetter = IsLetterCorrect(letter);
@@ -222,13 +231,13 @@ namespace Levent.Demo
             var outOfSize = IsOutOfSize(opponent, x, y);
             if (!outOfSize)
             {
-                throw new GridCellException($"Your dimentions are out of size! Dimentions: ({x},{y})");
+                throw new GridCellException($"Your dimensions are out of size! Dimensions: ({x},{y})");
             }
 
             var empty = IsCellEmpty(opponent, x, y);
             if (!empty)
             {
-                throw new GridCellException($"Cell is not empty! Dimentions: ({x},{y})");
+                throw new GridCellException($"Cell is not empty! Dimensions: ({x},{y})");
             }
 
             opponent.Grid[x, y] = lastPlayedLetter;
@@ -250,8 +259,6 @@ namespace Levent.Demo
                     }
                 }
             }
-
-            Console.WriteLine($"Not Empty Grid : {grid}");
 
             if (grid == User1.Grid.GetLength(0) * User1.Grid.GetLength(1))
             {
@@ -302,7 +309,7 @@ namespace Levent.Demo
             }
         }
 
-        private void Load()
+        private void LoadLetters()
         {
             LettersPoints.Add('A', 1);
             LettersPoints.Add('B', 3);
@@ -379,6 +386,9 @@ namespace Levent.Demo
 
             userResult1.Score = GetScore(userResult1.MeaningfulWords);
             userResult2.Score = GetScore(userResult2.MeaningfulWords);
+
+            userResult1.User = User1;
+            userResult2.User = User2;
 
             if (userResult1.Score >= userResult2.Score)
             {
@@ -458,13 +468,37 @@ namespace Levent.Demo
 
             return meaningfulwords;
         }
+
+        internal void ShowGrid(char[,] grid)
+        {
+            string row = "";
+            for (int i = 0; i < grid.GetLength(0); i++)
+            {
+                for (int j = 0; j < grid.GetLength(1); j++)
+                {
+                    if (grid[i,j] != '\0')
+                    {
+                        row += grid[i, j];
+                        row += ' ';
+                    }
+                    else
+                    {
+                        row += '-';
+                        row += ' ';
+                    }                    
+                }
+                Console.WriteLine(row + "\n");
+                row = "";
+            }
+        }
     }
 
     enum ExceptionType
     {
         None = 0,
         Dimension = 1,
-        Letter = 2
+        Letter = 2,
+        InvalidDimension = 3
     }
 
     internal class User
@@ -477,6 +511,7 @@ namespace Levent.Demo
             this.Grid = new char[x, y];
         }
     }
+
     internal class UserResult
     {
         public User User { get; set; }
@@ -502,6 +537,14 @@ namespace Levent.Demo
     internal class IncorrectLetterException : Exception
     {
         internal IncorrectLetterException(string message) : base(message)
+        {
+
+        }
+    }
+
+    internal class InvalidDimensionException : Exception
+    {
+        internal InvalidDimensionException(string message)
         {
 
         }
