@@ -33,6 +33,8 @@ namespace Levent.Engine
 
         public void Play(char letter, int x, int y)
         {
+            letter = char.ToUpper(letter);
+
             if (lastPlayedLetter != '\0')
             {
                 throw new Exception("Not your turn!");
