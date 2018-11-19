@@ -57,10 +57,10 @@ namespace Levent.Presentation.Hubs
                 }
 
                 await Clients.Client(opponentConnectionId)
-                    .SendAsync("PlayOpponentLetter", "Your turn! Please use this letter " + letter, "OpponentTurn");
+                    .SendAsync("PlayOpponentLetter", "Your turn! Please use this letter ", letter, "OpponentTurn");
 
                 await Clients.Client(turnOwnerConnectionId)
-                    .SendAsync("PlayOpponentLetter", "Hamle sırası rakipte!", "TurnOwner");
+                    .SendAsync("PlayOpponentLetter", "Hamle sırası rakipte!", letter, "TurnOwner");
             }
             catch (IncorrectLetterException exc)
             {
@@ -111,7 +111,7 @@ namespace Levent.Presentation.Hubs
                     .SendAsync("TurnOwnwer", e.Message);
             }
         }
-        
+
         public async Task GameIsOver(string connectionId)
         {
             var game = games.FirstOrDefault(_ => _.waitingPlayerConnectionId == Context.ConnectionId || _.playerConnectionId == Context.ConnectionId);

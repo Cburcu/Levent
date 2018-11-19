@@ -6,37 +6,38 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/gameHub").build();
 connection.on("StartGame", function (message, turnOwner) {
     if (turnOwner === "turnOwner") {
         LetterGrid.style.display = "block";
-        OpponentLetterGrid.style.display == "none";
+        OpponentLetterGrid.style.display = "none";
     } else {
         LetterGrid.style.display = "none";
-        OpponentLetterGrid.style.display == "none";
+        OpponentLetterGrid.style.display = "none";
     }
     var li = document.createElement("li");
     li.textContent = message;
     document.getElementById("messagesList").appendChild(li);
 });
 
-connection.on("PlayOpponentLetter", function (message, OpponentTurn) {
+connection.on("PlayOpponentLetter", function (message, opponentLetter, OpponentTurn) {
+    document.getElementById("letter-opponent").innerText = opponentLetter;//////////////
     if (OpponentTurn === "OpponentTurn") {
         LetterGrid.style.display = "none";
-        OpponentLetterGrid.style.display == "block";
+        OpponentLetterGrid.style.display = "block";
     } else {
         LetterGrid.style.display = "none";
-        OpponentLetterGrid.style.display == "none";
+        OpponentLetterGrid.style.display = "none";
     }
     var li = document.createElement("li");
-    li.textContent = message;
+    li.textContent = message + " " + opponentLetter;
     document.getElementById("messagesList").appendChild(li);
     
 });
 
-connection.on("TurnOwnwer", function (message) {
-    if (turnOwner === "turnOwner") {
+connection.on("TurnOwnwer", function (message, TurnOwner) {
+    if (TurnOwner === "TurnOwner") {
         LetterGrid.style.display = "block";
-        OpponentLetterGrid.style.display == "none";
+        OpponentLetterGrid.style.display = "none";
     } else {
         LetterGrid.style.display = "none";
-        OpponentLetterGrid.style.display == "none";
+        OpponentLetterGrid.style.display = "none";
     }
     var li = document.createElement("li");
     li.textContent = message;
@@ -50,18 +51,14 @@ connection.start().catch(function (err) {
 
 // Game Methods
 document.getElementById("joinGroupButton").addEventListener("click", function (event) {
-    var username = document.getElementById("userInput").value;
-    connection.invoke("JoinGroup", username).catch(function (err) {
-        return console.error(err.toString());
-    });
     var x = document.getElementById("Join");
     if (x.style.display === "block") {
         x.style.display = "none";
     }
-    var LetterGrid = document.getElementById("LetterGrid");
-    if (LetterGrid.style.display === "none") {
-        LetterGrid.style.display = "block";
-    }
+    var username = document.getElementById("userInput").value;
+    connection.invoke("JoinGroup", username).catch(function (err) {
+        return console.error(err.toString());
+    });
     event.preventDefault();
 });
 
@@ -84,23 +81,19 @@ function drop(ev) {
     var letter = letterElement.innerText;
     var xDimension = ev.target.attributes["x"].value;
     var yDimension = ev.target.attributes["y"].value;
-    if (letterElement) {
         var copyElement = letterElement.cloneNode(true);
-        letterElement.drag = function () { };
-        letterElement.allowDrop = false;
+        copyElement.id = copyElement.id + xDimension + yDimension;
+        copyElement.allowDrop = false;
         ev.target.appendChild(copyElement);
-    }
+    
 
     if (letterCellId != "letter-opponent") {
         connection.invoke("Play", letter, xDimension, yDimension)
-            //
             .catch(function (err) {
             return console.error(err.toString());
-        });
+            });
     } else {
-        document.getElementById("letter-opponent").innerText = letter;
         connection.invoke("PlayOpponent", xDimension, yDimension)
-            //
             .catch(function (err) {
             return console.error(err.toString());
         });
