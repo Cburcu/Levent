@@ -95,10 +95,37 @@ namespace Levent.Presentation.Hubs
                     opponentConnectionId = game.waitingPlayerConnectionId;
                 }
 
-                await Clients.Client(turnOwnerConnectionId)
-                    .SendAsync("TurnOwnwer", "Your turn!", "TurnOwner");
-                await Clients.Client(opponentConnectionId)
-                    .SendAsync("TurnOwnwer", "Hamle sırası rakipte!", "Opponent");
+                if (game.GameInstance.GameIsOver())
+                {
+                    await Clients.Client(turnOwnerConnectionId).SendAsync("GameIsOver", "Game is over!!!");
+                    await Clients.Client(opponentConnectionId).SendAsync("GameIsOver", "Game is over!!!");
+
+                    var winner = game.GameInstance.GetResult().Winner;
+                    var loser = game.GameInstance.GetResult().Loser;
+                    // Return Result
+                    var winnerUserName = winner.User.Username;
+                    var winnerScore = winner.Score;
+                    var winnerMeaningfulWords = winner.MeaningfulWords;
+
+                    var loserUserName = loser.User.Username;
+                    var loserScore = loser.Score;
+                    var loserMeaningfulWords = loser.MeaningfulWords;
+
+                    await Clients.Client(turnOwnerConnectionId).SendAsync("ResultUserName", winnerUserName, loserUserName);
+                    await Clients.Client(turnOwnerConnectionId).SendAsync("ResultUserScore", winnerScore, loserScore);
+                    await Clients.Client(turnOwnerConnectionId).SendAsync("ResultMeaningfulWords", winnerMeaningfulWords, loserMeaningfulWords);
+
+                    await Clients.Client(opponentConnectionId).SendAsync("ResultUserName", winnerUserName, loserUserName);
+                    await Clients.Client(opponentConnectionId).SendAsync("ResultUserScore", winnerScore, loserScore);
+                    await Clients.Client(opponentConnectionId).SendAsync("ResultMeaningfulWords", winnerMeaningfulWords, loserMeaningfulWords);
+                }
+                else
+                {
+                    await Clients.Client(turnOwnerConnectionId)
+                        .SendAsync("TurnOwnwer", "Your turn!", "TurnOwner");
+                    await Clients.Client(opponentConnectionId)
+                        .SendAsync("TurnOwnwer", "Hamle sırası rakipte!", "Opponent");
+                }
             }
             catch (GridCellException e)
             {
@@ -111,16 +138,6 @@ namespace Levent.Presentation.Hubs
                     .SendAsync("TurnOwnwer", e.Message);
             }
         }
-
-        public async Task GameIsOver(string connectionId)
-        {
-            var game = games.FirstOrDefault(_ => _.waitingPlayerConnectionId == Context.ConnectionId || _.playerConnectionId == Context.ConnectionId);
-
-            game.GameInstance.GameIsOver();
-
-            await Clients.Client(connectionId).SendAsync("StartGame", connectionId, "Grid!");
-        }
-
     }
 
     class GameController
@@ -130,7 +147,7 @@ namespace Levent.Presentation.Hubs
         internal readonly string playerName;
         public readonly string playerConnectionId;
 
-        public int dimension = 8;
+        public int dimension = 2;
 
         public Game GameInstance { get; set; }
 

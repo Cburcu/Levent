@@ -22,7 +22,7 @@
     </div>
 
     @*Grid*@
-    <div class="row" id="Grid">
+    <div class="row" id="Grid" style="display:block;">
         &nbsp;
         <div class="row">
             <table class="table table-bordered table-responsive table-condensed">
@@ -124,7 +124,7 @@
     </div>
 
     @*letters Grid*@
-    <div class="row">
+    <div id="Letters" class="row" style="display:block;">
         &nbsp;
         <div class="row">
             <div class="col-lg-11" id="LetterGrid" style="display:none;">
@@ -183,10 +183,27 @@
     </div>
 
     @*Show Messages*@
-    <div class="row">
+    <div id="Messages" class="row" style="display:block;">
         <div class="col-6">&nbsp;</div>
         <div class="col-6">
             <ul id="messagesList"></ul>
+        </div>
+    </div>
+
+    <div id="Result" class="row" style="display:none;">
+        &nbsp;
+        <h2 id="Gameover" style=""></h2>
+        <div class="col-md-6">
+            <p><b>Winner</b></p>
+            <p>Name: <span id="winnerName"></span></p>
+            <p>Score: <span id="winnerScore"></span></p>
+            <p>Meaningful Words <ul id="winnerWords"></ul></p>
+        </div>
+        <div class="col-md-6">
+            <p><b>Loser</b></p>
+            <p>Name: <span id="loserName"></span></p>
+            <p>Score: <span id="loserScore"></span></p>
+            <p>Meaningful Words <ul id="loserWords"></ul></p>
         </div>
     </div>
 </div>

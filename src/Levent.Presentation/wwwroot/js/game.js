@@ -28,7 +28,7 @@ connection.on("PlayOpponentLetter", function (message, opponentLetter, OpponentT
     var li = document.createElement("li");
     li.textContent = message + " " + opponentLetter;
     document.getElementById("messagesList").appendChild(li);
-    
+
 });
 
 connection.on("TurnOwnwer", function (message, TurnOwner) {
@@ -42,7 +42,39 @@ connection.on("TurnOwnwer", function (message, TurnOwner) {
     var li = document.createElement("li");
     li.textContent = message;
     document.getElementById("messagesList").appendChild(li);
-    
+
+});
+
+connection.on("GameIsOver", function (message, result) {
+    alert(result.winnerUserName);
+    document.getElementById("Grid").style.display = "none";
+    document.getElementById("Letters").style.display = "none";
+    document.getElementById("Messages").style.display = "none";
+    document.getElementById("Result").style.display = "block";
+    document.getElementById("Gameover").innerText = message;
+});
+
+connection.on("ResultUserName", function (winnerUserName, loserUserName) {
+    document.getElementById("winnerName").innerText = winnerUserName;
+    document.getElementById("loserName").innerText = loserUserName;
+});
+
+connection.on("ResultUserScore", function (winnerScore, loserScore) {
+    document.getElementById("winnerScore").innerText = winnerScore;
+    document.getElementById("loserScore").innerText = loserScore;
+});
+
+connection.on("ResultMeaningfulWords", function (winnerMeaningfulWords, loserMeaningfulWords) {
+    for (var i = 0; i < winnerMeaningfulWords.length; i++) {
+        var li = document.createElement("li");
+        li.textContent = winnerMeaningfulWords[i];
+        document.getElementById("winnerWords").appendChild(li);
+    }
+    for (var i = 0; i < loserMeaningfulWords.length; i++) {
+        var li = document.createElement("li");
+        li.textContent = loserMeaningfulWords[i];
+        document.getElementById("loserWords").appendChild(li);
+    }
 });
 
 connection.start().catch(function (err) {
@@ -81,22 +113,22 @@ function drop(ev) {
     var letter = letterElement.innerText;
     var xDimension = ev.target.attributes["x"].value;
     var yDimension = ev.target.attributes["y"].value;
-        var copyElement = letterElement.cloneNode(true);
-        copyElement.id = copyElement.id + xDimension + yDimension;
-        copyElement.allowDrop = false;
-        ev.target.appendChild(copyElement);
-    
+    var copyElement = letterElement.cloneNode(true);
+    copyElement.id = copyElement.id + xDimension + yDimension;
+    copyElement.allowDrop = false;
+    ev.target.appendChild(copyElement);
+
 
     if (letterCellId != "letter-opponent") {
         connection.invoke("Play", letter, xDimension, yDimension)
             .catch(function (err) {
-            return console.error(err.toString());
+                return console.error(err.toString());
             });
     } else {
         connection.invoke("PlayOpponent", xDimension, yDimension)
             .catch(function (err) {
-            return console.error(err.toString());
-        });
+                return console.error(err.toString());
+            });
     }
     event.preventDefault();
 }
