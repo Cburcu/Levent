@@ -3,11 +3,12 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Levent.Presentation</title>
+    <title>@ViewData["Title"] Levent</title>
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -16,9 +17,10 @@
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
     <style>
-        tr {
-            height: 30px;
-            font-weight: 700;
+        td {
+            vertical-align: middle;
+            width: 40px;
+            height: 40px;
         }
     </style>
 </head>
@@ -32,13 +34,11 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Levent.Presentation</a>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">LEVENT</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Index"><b>NEW GAME</b></a></li>
                 </ul>
             </div>
         </div>
@@ -50,7 +50,8 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2018 - Levent.Presentation</p>
+            <p>&copy; 2018 - <a href="https://github.com/Cburcu/Levent"><i class="fa fa-github" aria-hidden="true"></i>Levent</a></p>
+            <p>Cemile Burcu Atay</p>
         </footer>
     </div>
 

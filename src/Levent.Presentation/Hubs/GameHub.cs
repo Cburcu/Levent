@@ -1,4 +1,5 @@
 ﻿using Levent.Engine;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,6 @@ namespace Levent.Presentation.Hubs
 {
     public class GameHub : Hub
     {
-        //public static List<string> ConnectionIds = new List<string>();
         public static string waitingUserId;
         public static string waitingUserName;
 
@@ -17,21 +17,44 @@ namespace Levent.Presentation.Hubs
 
         public async Task JoinGroup(string playerName)
         {
+            await base.OnConnectedAsync();
             if (waitingUserId == null)
             {
                 waitingUserId = Context.ConnectionId;
                 waitingUserName = playerName;
+                await Clients.Client(waitingUserId).SendAsync("WaitingOpponent", "Rakip bekleniyor..");
             }
             else
             {
                 var game = new GameController(waitingUserName, waitingUserId, playerName, Context.ConnectionId);
                 games.Add(game);
 
-                await Clients.Client(waitingUserId).SendAsync("StartGame", "Oyuna girildi. Hamle sırası sizde!", "turnOwner");
-                await Clients.Client(Context.ConnectionId).SendAsync("StartGame", "Oyuna girildi. Hamle sırası Rakipte", "opponent");
+                await Clients.Client(waitingUserId).SendAsync("StartGame",
+                    "Oyuna girildi. Hamle sırası sizde!",
+                    "turnOwner",
+                    waitingUserName, playerName,
+                    Game.LettersPoints);
+                await Clients.Client(Context.ConnectionId).SendAsync("StartGame",
+                    "Oyuna girildi. Hamle sırası rakipte.",
+                    "opponent",
+                    waitingUserName, playerName,
+                    Game.LettersPoints);
 
                 waitingUserId = null;
                 waitingUserName = null;
+            }
+        }
+
+        public override async Task OnDisconnectedAsync(Exception exception)
+        {
+            var game = games.FirstOrDefault(_ => _.waitingPlayerConnectionId == Context.ConnectionId || _.playerConnectionId == Context.ConnectionId);
+            if (game.waitingPlayerConnectionId == Context.ConnectionId)
+            {
+                await Clients.Client(game.playerConnectionId).SendAsync("RestartGame", game.playerName, "Rakip oyundan ayrıldı. Lütfen oyunu yeniden başlatın!");
+            }
+            else
+            {
+                await Clients.Client(game.waitingPlayerConnectionId).SendAsync("RestartGame", game.waitingPlayerName, "Rakip oyundan ayrıldı. Lütfen oyunu yeniden başlatın!");
             }
         }
 
@@ -57,7 +80,7 @@ namespace Levent.Presentation.Hubs
                 }
 
                 await Clients.Client(opponentConnectionId)
-                    .SendAsync("PlayOpponentLetter", "Your turn! Please use this letter ", letter, "OpponentTurn");
+                    .SendAsync("PlayOpponentLetter", "Hamle sırası sizde! Lütfen " + letter + " harfini kullanın. ", letter, "OpponentTurn");
 
                 await Clients.Client(turnOwnerConnectionId)
                     .SendAsync("PlayOpponentLetter", "Hamle sırası rakipte!", letter, "TurnOwner");
@@ -65,12 +88,12 @@ namespace Levent.Presentation.Hubs
             catch (IncorrectLetterException exc)
             {
                 await Clients.Client(turnOwnerConnectionId)
-                    .SendAsync("PlayOpponentLetter", exc.Message);
+                    .SendAsync("IncorrectLetterException", exc.Message);
             }
             catch (GridCellException exc)
             {
                 await Clients.Client(turnOwnerConnectionId)
-                    .SendAsync("PlayOpponentLetter", exc.Message);
+                    .SendAsync("GridCellException", exc.Message);
             }
         }
 
@@ -97,32 +120,32 @@ namespace Levent.Presentation.Hubs
 
                 if (game.GameInstance.GameIsOver())
                 {
-                    await Clients.Client(turnOwnerConnectionId).SendAsync("GameIsOver", "Game is over!!!");
-                    await Clients.Client(opponentConnectionId).SendAsync("GameIsOver", "Game is over!!!");
-
                     var winner = game.GameInstance.GetResult().Winner;
                     var loser = game.GameInstance.GetResult().Loser;
-                    // Return Result
-                    var winnerUserName = winner.User.Username;
-                    var winnerScore = winner.Score;
-                    var winnerMeaningfulWords = winner.MeaningfulWords;
 
-                    var loserUserName = loser.User.Username;
-                    var loserScore = loser.Score;
-                    var loserMeaningfulWords = loser.MeaningfulWords;
-
-                    await Clients.Client(turnOwnerConnectionId).SendAsync("ResultUserName", winnerUserName, loserUserName);
-                    await Clients.Client(turnOwnerConnectionId).SendAsync("ResultUserScore", winnerScore, loserScore);
-                    await Clients.Client(turnOwnerConnectionId).SendAsync("ResultMeaningfulWords", winnerMeaningfulWords, loserMeaningfulWords);
-
-                    await Clients.Client(opponentConnectionId).SendAsync("ResultUserName", winnerUserName, loserUserName);
-                    await Clients.Client(opponentConnectionId).SendAsync("ResultUserScore", winnerScore, loserScore);
-                    await Clients.Client(opponentConnectionId).SendAsync("ResultMeaningfulWords", winnerMeaningfulWords, loserMeaningfulWords);
+                    await Clients.Client(turnOwnerConnectionId).SendAsync("GameIsOver", "OYUN BİTTİ!!!", new
+                    {
+                        winnerName = winner.User.Username,
+                        winnerScore = winner.Score,
+                        winnerMeaningfulWords = winner.MeaningfulWords,
+                        loserName = loser.User.Username,
+                        loserScore = loser.Score,
+                        loserMeaningfulWords = loser.MeaningfulWords
+                    });
+                    await Clients.Client(opponentConnectionId).SendAsync("GameIsOver", "OYUN BİTTİ!!!", new
+                    {
+                        winnerName = winner.User.Username,
+                        winnerScore = winner.Score,
+                        winnerMeaningfulWords = winner.MeaningfulWords,
+                        loserName = loser.User.Username,
+                        loserScore = loser.Score,
+                        loserMeaningfulWords = loser.MeaningfulWords
+                    });
                 }
                 else
                 {
                     await Clients.Client(turnOwnerConnectionId)
-                        .SendAsync("TurnOwnwer", "Your turn!", "TurnOwner");
+                        .SendAsync("TurnOwnwer", "Hamle sırası sizde!", "TurnOwner");
                     await Clients.Client(opponentConnectionId)
                         .SendAsync("TurnOwnwer", "Hamle sırası rakipte!", "Opponent");
                 }
@@ -130,12 +153,12 @@ namespace Levent.Presentation.Hubs
             catch (GridCellException e)
             {
                 await Clients.Client(opponentConnectionId)
-                    .SendAsync("TurnOwnwer", e.Message);
+                    .SendAsync("GridCellException", e.Message);
             }
             catch (IncorrectLetterException e)
             {
                 await Clients.Client(opponentConnectionId)
-                    .SendAsync("TurnOwnwer", e.Message);
+                    .SendAsync("IncorrectLetterException", e.Message);
             }
         }
     }
@@ -147,7 +170,7 @@ namespace Levent.Presentation.Hubs
         internal readonly string playerName;
         public readonly string playerConnectionId;
 
-        public int dimension = 2;
+        public int dimension = 8;
 
         public Game GameInstance { get; set; }
 

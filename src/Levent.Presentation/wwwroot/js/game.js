@@ -2,12 +2,44 @@
 
 var connection = new signalR.HubConnectionBuilder().withUrl("/gameHub").build();
 
-// Connection messages
-connection.on("StartGame", function (message, turnOwner) {
+// WaitingOpponent
+connection.on("WaitingOpponent", function (message) {
+    var li = document.createElement("li");
+    li.textContent = message;
+    document.getElementById("messagesList").appendChild(li);
+});
+
+// Start Game
+connection.on("StartGame", function (message, turnOwner, waitingUserName, playerName, LettersPoints) {
+
+    for (var i in LettersPoints) {
+        var tdPoint = document.createElement("td");
+        tdPoint.align = "center";
+        tdPoint.style = "vertical-align: middle; width: 40px; height: 40px;";
+        var point = LettersPoints[i];
+        tdPoint.innerText = point;
+        document.getElementById("TurnOwnerLettersPoints").appendChild(tdPoint);
+
+        var tdLetter = document.createElement("td");
+        i = i.toUpperCase();
+        tdLetter.innerText = i;
+        tdLetter.id = "letter" + i;
+        tdLetter.align = "center";
+        tdLetter.style = "vertical-align: middle; width: 40px; height: 40px;";
+        tdLetter.draggable = "true";
+        document.getElementById("TurnOwnerLetters").appendChild(tdLetter);
+        tdLetter.addEventListener('dragstart', function drag(ev) {
+            console.log("drag ev");
+            ev.dataTransfer.setData("text", ev.target.id);
+        });
+    }
+
     if (turnOwner === "turnOwner") {
+        document.getElementById("userName").innerText = waitingUserName;
         LetterGrid.style.display = "block";
         OpponentLetterGrid.style.display = "none";
     } else {
+        document.getElementById("userName").innerText = playerName;
         LetterGrid.style.display = "none";
         OpponentLetterGrid.style.display = "none";
     }
@@ -16,8 +48,17 @@ connection.on("StartGame", function (message, turnOwner) {
     document.getElementById("messagesList").appendChild(li);
 });
 
+// Restart Game
+connection.on("RestartGame", function (turnownerName, message) {
+    document.getElementById("GridandMessage").style.display = "none";
+    document.getElementById("Letters").style.display = "none";
+    document.getElementById("RestartGame").style.display = "block";
+    document.getElementById("Restart").innerText = turnownerName + "... " + message;
+});
+
+// Game Stream
 connection.on("PlayOpponentLetter", function (message, opponentLetter, OpponentTurn) {
-    document.getElementById("letter-opponent").innerText = opponentLetter;//////////////
+    document.getElementById("letter-opponent").innerText = opponentLetter;
     if (OpponentTurn === "OpponentTurn") {
         LetterGrid.style.display = "none";
         OpponentLetterGrid.style.display = "block";
@@ -26,7 +67,7 @@ connection.on("PlayOpponentLetter", function (message, opponentLetter, OpponentT
         OpponentLetterGrid.style.display = "none";
     }
     var li = document.createElement("li");
-    li.textContent = message + " " + opponentLetter;
+    li.textContent = message;
     document.getElementById("messagesList").appendChild(li);
 
 });
@@ -45,49 +86,57 @@ connection.on("TurnOwnwer", function (message, TurnOwner) {
 
 });
 
+// Game is over
 connection.on("GameIsOver", function (message, result) {
-    alert(result.winnerUserName);
-    document.getElementById("Grid").style.display = "none";
+    document.getElementById("GridandMessage").style.display = "none";
     document.getElementById("Letters").style.display = "none";
-    document.getElementById("Messages").style.display = "none";
     document.getElementById("Result").style.display = "block";
     document.getElementById("Gameover").innerText = message;
-});
 
-connection.on("ResultUserName", function (winnerUserName, loserUserName) {
-    document.getElementById("winnerName").innerText = winnerUserName;
-    document.getElementById("loserName").innerText = loserUserName;
-});
+    document.getElementById("winnerName").innerText = result.winnerName;
+    document.getElementById("loserName").innerText = result.loserName;
 
-connection.on("ResultUserScore", function (winnerScore, loserScore) {
-    document.getElementById("winnerScore").innerText = winnerScore;
-    document.getElementById("loserScore").innerText = loserScore;
-});
+    document.getElementById("winnerScore").innerText = result.winnerScore;
+    document.getElementById("loserScore").innerText = result.loserScore;
 
-connection.on("ResultMeaningfulWords", function (winnerMeaningfulWords, loserMeaningfulWords) {
-    for (var i = 0; i < winnerMeaningfulWords.length; i++) {
+    for (var i = 0; i < result.winnerMeaningfulWords.length; i++) {
         var li = document.createElement("li");
-        li.textContent = winnerMeaningfulWords[i];
+        li.textContent = result.winnerMeaningfulWords[i];
         document.getElementById("winnerWords").appendChild(li);
     }
-    for (var i = 0; i < loserMeaningfulWords.length; i++) {
+    for (var i = 0; i < result.loserMeaningfulWords.length; i++) {
         var li = document.createElement("li");
-        li.textContent = loserMeaningfulWords[i];
+        li.textContent = result.loserMeaningfulWords[i];
         document.getElementById("loserWords").appendChild(li);
     }
 });
 
+// Exeption Messages
+connection.on("GridCellException", function (message) {
+    var li = document.createElement("li");
+    li.textContent = message;
+    document.getElementById("messagesList").appendChild(li);
+});
+
+connection.on("IncorrectLetterException", function (message) {
+    var li = document.createElement("li");
+    li.textContent = message;
+    document.getElementById("messagesList").appendChild(li);
+});
+
+// Start
 connection.start().catch(function (err) {
     return console.error(err.toString());
 });
 
 // Game Methods
-document.getElementById("joinGroupButton").addEventListener("click", function (event) {
+document.getElementById("joinGame").addEventListener("click", function (event) {
     var x = document.getElementById("Join");
     if (x.style.display === "block") {
         x.style.display = "none";
     }
     var username = document.getElementById("userInput").value;
+    username = username.toUpperCase();
     connection.invoke("JoinGroup", username).catch(function (err) {
         return console.error(err.toString());
     });
@@ -107,7 +156,7 @@ function drag(ev) {
 
 function drop(ev) {
     console.log("drop ev");
-    ev.preventDefault();
+    //ev.preventDefault();
     var letterCellId = ev.dataTransfer.getData("text");
     var letterElement = document.getElementById(letterCellId);
     var letter = letterElement.innerText;

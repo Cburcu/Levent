@@ -8,7 +8,7 @@ namespace Levent.Engine
     {
         public User TurnOwner { get; set; }
 
-        private static readonly Dictionary<char, int> LettersPoints = new Dictionary<char, int>();
+        public static readonly Dictionary<char, int> LettersPoints = new Dictionary<char, int>();
         private static List<string> Words = new List<string>();
         private User User1 { get; set; }
         private User User2 { get; set; }
@@ -91,18 +91,18 @@ namespace Levent.Engine
         {
             int grid = 0;
 
-            for (int i = 0; i < User1.Grid.GetLength(0); i++)
+            for (int i = 0; i < User2.Grid.GetLength(0); i++)
             {
-                for (int j = 0; j < User1.Grid.GetLength(1); j++)
+                for (int j = 0; j < User2.Grid.GetLength(1); j++)
                 {
-                    if (User1.Grid[i, j] != '\0')
+                    if (User2.Grid[i, j] != '\0')
                     {
                         grid++;
                     }
                 }
             }
 
-            if (grid == User1.Grid.GetLength(0) * User1.Grid.GetLength(1))
+            if (grid == User2.Grid.GetLength(0) * User2.Grid.GetLength(1))
             {
                 return true;
             }

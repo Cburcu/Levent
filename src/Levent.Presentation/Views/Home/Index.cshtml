@@ -11,7 +11,7 @@
         <div class="row">
             <div class="col-6">&nbsp;</div>
             <div class="col-6">
-                <button id="joinGroupButton" value="Join Gruop">Join Group</button>
+                <button id="joinGame" value="Start Game">Start Game</button>
             </div>
         </div>
         <div class="row">
@@ -21,104 +21,113 @@
         </div>
     </div>
 
-    @*Grid*@
-    <div class="row" id="Grid" style="display:block;">
+    @*Grid and Messages*@
+    <div class="row" id="GridandMessage" style="display:block;">
         &nbsp;
-        <div class="row">
-            <table class="table table-bordered table-responsive table-condensed">
-                @*1.Satır*@
-                <tr style="text-align:center;">
-                    <td id="id00" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="0" y="0"></td>
-                    <td id="id01" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="0" y="1"></td>
-                    <td id="id02" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="0" y="2"></td>
-                    <td id="id03" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="0" y="3"></td>
-                    <td id="id04" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="0" y="4"></td>
-                    <td id="id05" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="0" y="5"></td>
-                    <td id="id06" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="0" y="6"></td>
-                    <td id="id07" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="0" y="7"></td>
-                </tr>
-                @*2.Satır*@
-                <tr style="text-align:center;">
-                    <td id="id10" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="1" y="0"></td>
-                    <td id="id11" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="1" y="1"></td>
-                    <td id="id12" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="1" y="2"></td>
-                    <td id="id13" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="1" y="3"></td>
-                    <td id="id14" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="1" y="4"></td>
-                    <td id="id15" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="1" y="5"></td>
-                    <td id="id16" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="1" y="6"></td>
-                    <td id="id17" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="1" y="7"></td>
-                </tr>
-                @*3.Satır*@
-                <tr style="text-align:center;">
-                    <td id="id20" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="2" y="0"></td>
-                    <td id="id21" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="2" y="1"></td>
-                    <td id="id22" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="2" y="2"></td>
-                    <td id="id23" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="2" y="3"></td>
-                    <td id="id24" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="2" y="4"></td>
-                    <td id="id25" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="2" y="5"></td>
-                    <td id="id26" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="2" y="6"></td>
-                    <td id="id27" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="2" y="7"></td>
-                </tr>
-                @*4.Satır*@
-                <tr style="text-align:center;">
-                    <td id="id30" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="3" y="0"></td>
-                    <td id="id31" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="3" y="1"></td>
-                    <td id="id32" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="3" y="2"></td>
-                    <td id="id33" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="3" y="3"></td>
-                    <td id="id34" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="3" y="4"></td>
-                    <td id="id35" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="3" y="5"></td>
-                    <td id="id36" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="3" y="6"></td>
-                    <td id="id37" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="3" y="7"></td>
-                </tr>
-                @*5.Satır*@
-                <tr style="text-align:center;">
-                    <td id="id40" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="4" y="0"></td>
-                    <td id="id41" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="4" y="1"></td>
-                    <td id="id42" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="4" y="2"></td>
-                    <td id="id43" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="4" y="3"></td>
-                    <td id="id44" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="4" y="4"></td>
-                    <td id="id45" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="4" y="5"></td>
-                    <td id="id46" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="4" y="6"></td>
-                    <td id="id47" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="4" y="7"></td>
-                </tr>
-                @*6.Satır*@
-                <tr style="text-align:center;">
-                    <td id="id50" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="5" y="0"></td>
-                    <td id="id51" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="5" y="1"></td>
-                    <td id="id52" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="5" y="2"></td>
-                    <td id="id53" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="5" y="3"></td>
-                    <td id="id54" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="5" y="4"></td>
-                    <td id="id55" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="5" y="5"></td>
-                    <td id="id56" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="5" y="6"></td>
-                    <td id="id57" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="5" y="7"></td>
-                </tr>
-                @*7.Satır*@
-                <tr style="text-align:center;">
-                    <td id="id60" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="6" y="0"></td>
-                    <td id="id61" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="6" y="1"></td>
-                    <td id="id62" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="6" y="2"></td>
-                    <td id="id63" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="6" y="3"></td>
-                    <td id="id64" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="6" y="4"></td>
-                    <td id="id65" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="6" y="5"></td>
-                    <td id="id66" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="6" y="6"></td>
-                    <td id="id67" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="6" y="7"></td>
-                </tr>
-                @*8.Satır*@
-                <tr style="text-align:center;">
-                    <td id="id70" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="7" y="0"></td>
-                    <td id="id71" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="7" y="1"></td>
-                    <td id="id72" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="7" y="2"></td>
-                    <td id="id73" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="7" y="3"></td>
-                    <td id="id74" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="7" y="4"></td>
-                    <td id="id75" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="7" y="5"></td>
-                    <td id="id76" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="7" y="6"></td>
-                    <td id="id77" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="7" y="7"></td>
-                </tr>
-            </table>
+
+        @*Grid*@
+        <div class="col-lg-6">
+            &nbsp;
+            <div class="row">
+                <table id="TableGrid" class="table table-bordered table-responsive table-condensed" style="width:320px; height:320px;">
+                    @*1.Satır*@
+                    <tr>
+                        <td align="center" id="id00" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="0" y="0"></td>
+                        <td align="center" id="id01" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="0" y="1"></td>
+                        <td align="center" id="id02" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="0" y="2"></td>
+                        <td align="center" id="id03" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="0" y="3"></td>
+                        <td align="center" id="id04" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="0" y="4"></td>
+                        <td align="center" id="id05" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="0" y="5"></td>
+                        <td align="center" id="id06" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="0" y="6"></td>
+                        <td align="center" id="id07" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="0" y="7"></td>
+                    </tr>
+                    @*2.Satır*@
+                    <tr>
+                        <td align="center" id="id10" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="1" y="0"></td>
+                        <td align="center" id="id11" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="1" y="1"></td>
+                        <td align="center" id="id12" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="1" y="2"></td>
+                        <td align="center" id="id13" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="1" y="3"></td>
+                        <td align="center" id="id14" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="1" y="4"></td>
+                        <td align="center" id="id15" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="1" y="5"></td>
+                        <td align="center" id="id16" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="1" y="6"></td>
+                        <td align="center" id="id17" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="1" y="7"></td>
+                    </tr>
+                    @*3.Satır*@
+                    <tr>
+                        <td align="center" id="id20" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="2" y="0"></td>
+                        <td align="center" id="id21" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="2" y="1"></td>
+                        <td align="center" id="id22" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="2" y="2"></td>
+                        <td align="center" id="id23" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="2" y="3"></td>
+                        <td align="center" id="id24" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="2" y="4"></td>
+                        <td align="center" id="id25" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="2" y="5"></td>
+                        <td align="center" id="id26" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="2" y="6"></td>
+                        <td align="center" id="id27" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="2" y="7"></td>
+                    </tr>
+                    @*4.Satır*@
+                    <tr>
+                        <td align="center" id="id30" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="3" y="0"></td>
+                        <td align="center" id="id31" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="3" y="1"></td>
+                        <td align="center" id="id32" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="3" y="2"></td>
+                        <td align="center" id="id33" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="3" y="3"></td>
+                        <td align="center" id="id34" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="3" y="4"></td>
+                        <td align="center" id="id35" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="3" y="5"></td>
+                        <td align="center" id="id36" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="3" y="6"></td>
+                        <td align="center" id="id37" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="3" y="7"></td>
+                    </tr>
+                    @*5.Satır*@
+                    <tr>
+                        <td align="center" id="id40" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="4" y="0"></td>
+                        <td align="center" id="id41" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="4" y="1"></td>
+                        <td align="center" id="id42" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="4" y="2"></td>
+                        <td align="center" id="id43" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="4" y="3"></td>
+                        <td align="center" id="id44" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="4" y="4"></td>
+                        <td align="center" id="id45" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="4" y="5"></td>
+                        <td align="center" id="id46" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="4" y="6"></td>
+                        <td align="center" id="id47" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="4" y="7"></td>
+                    </tr>
+                    @*6.Satır*@
+                    <tr>
+                        <td align="center" id="id50" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="5" y="0"></td>
+                        <td align="center" id="id51" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="5" y="1"></td>
+                        <td align="center" id="id52" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="5" y="2"></td>
+                        <td align="center" id="id53" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="5" y="3"></td>
+                        <td align="center" id="id54" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="5" y="4"></td>
+                        <td align="center" id="id55" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="5" y="5"></td>
+                        <td align="center" id="id56" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="5" y="6"></td>
+                        <td align="center" id="id57" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="5" y="7"></td>
+                    </tr>
+                    @*7.Satır*@
+                    <tr>
+                        <td align="center" id="id60" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="6" y="0"></td>
+                        <td align="center" id="id61" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="6" y="1"></td>
+                        <td align="center" id="id62" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="6" y="2"></td>
+                        <td align="center" id="id63" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="6" y="3"></td>
+                        <td align="center" id="id64" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="6" y="4"></td>
+                        <td align="center" id="id65" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="6" y="5"></td>
+                        <td align="center" id="id66" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="6" y="6"></td>
+                        <td align="center" id="id67" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="6" y="7"></td>
+                    </tr>
+                    @*8.Satır*@
+                    <tr>
+                        <td align="center" id="id70" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="7" y="0"></td>
+                        <td align="center" id="id71" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="7" y="1"></td>
+                        <td align="center" id="id72" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="7" y="2"></td>
+                        <td align="center" id="id73" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="7" y="3"></td>
+                        <td align="center" id="id74" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="7" y="4"></td>
+                        <td align="center" id="id75" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="7" y="5"></td>
+                        <td align="center" id="id76" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="7" y="6"></td>
+                        <td align="center" id="id77" class="gridCell" ondrop="drop(event)" ondragover="allowDrop(event)" x="7" y="7"></td>
+                    </tr>
+                </table>
+            </div>
         </div>
-        <div class="row">
-            <div class="col-12">
-                <hr />
+
+        @*Show Messages*@
+        <div class="col-lg-6" style=" height: 320px; overflow-y: scroll;">
+            &nbsp;
+            <h4 id="userName"></h4>
+            <div class="row" style="display:block;">
+                <ul id="messagesList"></ul>
             </div>
         </div>
     </div>
@@ -129,70 +138,27 @@
         <div class="row">
             <div class="col-lg-11" id="LetterGrid" style="display:none;">
                 <p>Letter</p>
-                <table class="table table-bordered table-responsive table-condensed" id="TurnOwnerLetters">
-                    @*1.Satır*@
-                    <tr style="text-align:center;">
-                        <td id="letter-a" draggable="true" ondragstart="drag(event)">A</td>
-                        <td id="letter-b" draggable="true" ondragstart="drag(event)">B</td>
-                        <td id="letter-c" draggable="true" ondragstart="drag(event)">C</td>
-                        <td id="letter-ç" draggable="true" ondragstart="drag(event)">Ç</td>
-                        <td id="letter-d" draggable="true" ondragstart="drag(event)">D</td>
-                        <td id="letter-e" draggable="true" ondragstart="drag(event)">E</td>
-                        <td id="letter-f" draggable="true" ondragstart="drag(event)">F</td>
-                        <td id="letter-g" draggable="true" ondragstart="drag(event)">G</td>
-                        <td id="letter-ğ" draggable="true" ondragstart="drag(event)">Ğ</td>
-                        <td id="letter-h" draggable="true" ondragstart="drag(event)">H</td>
-                        <td id="letter-ı" draggable="true" ondragstart="drag(event)">I</td>
-                        <td id="letter-i" draggable="true" ondragstart="drag(event)">İ</td>
-                        <td id="letter-j" draggable="true" ondragstart="drag(event)">J</td>
-                        <td id="letter-k" draggable="true" ondragstart="drag(event)">K</td>
-                        <td id="letter-l" draggable="true" ondragstart="drag(event)">L</td>
-                        <td id="letter-m" draggable="true" ondragstart="drag(event)">M</td>
-                        <td id="letter-n" draggable="true" ondragstart="drag(event)">N</td>
-                        <td id="letter-o" draggable="true" ondragstart="drag(event)">O</td>
-                        <td id="letter-ö" draggable="true" ondragstart="drag(event)">Ö</td>
-                        <td id="letter-p" draggable="true" ondragstart="drag(event)">P</td>
-                        <td id="letter-r" draggable="true" ondragstart="drag(event)">R</td>
-                        <td id="letter-s" draggable="true" ondragstart="drag(event)">S</td>
-                        <td id="letter-ş" draggable="true" ondragstart="drag(event)">Ş</td>
-                        <td id="letter-t" draggable="true" ondragstart="drag(event)">T</td>
-                        <td id="letter-u" draggable="true" ondragstart="drag(event)">U</td>
-                        <td id="letter-ü" draggable="true" ondragstart="drag(event)">Ü</td>
-                        <td id="letter-v" draggable="true" ondragstart="drag(event)">V</td>
-                        <td id="letter-y" draggable="true" ondragstart="drag(event)">Y</td>
-                        <td id="letter-z" draggable="true" ondragstart="drag(event)">Z</td>
-                    </tr>
+                <table id="lettersGrid" class="table table-bordered table-responsive table-condensed">
+                    <tr id="TurnOwnerLetters"></tr>
+                    <tr id="TurnOwnerLettersPoints"></tr>
                 </table>
             </div>
 
             <div class="col-lg-1" id="OpponentLetterGrid" style="display:none;">
                 <p>Opponent Letter</p>
                 <table class="table table-bordered table-responsive table-condensed" id="OpponentLetter">
-                    @*1.Satır*@
-                    <tr style="text-align:center;">
-                        <td id="letter-opponent" draggable="true" ondragstart="drag(event)" height="20px;" width="20px;"></td>
+                    <tr>
+                        <td id="letter-opponent" align="center" style="vertical-align: middle; width: 40px; height: 40px;" draggable="true" ondragstart="drag(event)"></td>
                     </tr>
                 </table>
             </div>
         </div>
-        <div class="row">
-            <div class="col-12">
-                <hr />
-            </div>
-        </div>
     </div>
 
-    @*Show Messages*@
-    <div id="Messages" class="row" style="display:block;">
-        <div class="col-6">&nbsp;</div>
-        <div class="col-6">
-            <ul id="messagesList"></ul>
-        </div>
-    </div>
-
+    @*Result*@
     <div id="Result" class="row" style="display:none;">
         &nbsp;
-        <h2 id="Gameover" style=""></h2>
+        <h2 id="Gameover" align="center"></h2>
         <div class="col-md-6">
             <p><b>Winner</b></p>
             <p>Name: <span id="winnerName"></span></p>
@@ -205,6 +171,12 @@
             <p>Score: <span id="loserScore"></span></p>
             <p>Meaningful Words <ul id="loserWords"></ul></p>
         </div>
+    </div>
+
+    @*Restart Game*@
+    <div id="RestartGame" class="row" style="display:none;">
+        &nbsp;
+        <h2 id="Restart"></h2>
     </div>
 </div>
 <script src="~/lib/signalr/dist/browser/signalr.js"></script>
