@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using System.Text;
 
 namespace Levent.Engine
@@ -335,16 +337,17 @@ namespace Levent.Engine
                 return;
             }
 
-            Words.Add("AL");
-            Words.Add("AY");
-            Words.Add("ALİ");
-            Words.Add("YAY");
-            Words.Add("ALA");
-            Words.Add("LAL");
-            Words.Add("AYAK");
-            Words.Add("GEZİ");
-            Words.Add("KİRA");
-            Words.Add("AZRA");
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Words.txt");
+            string text = File.ReadAllText(path);
+
+            string[] words = text.Split('\n', '\r');
+
+            for (int i = 0; i < words.Length; i += 2)
+            {
+                string[] word = words[i].ToUpper().Split(' ');
+
+                Words.Add(word[0]);
+            }
         }
     }
 }

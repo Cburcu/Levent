@@ -156,7 +156,6 @@ function drag(ev) {
 
 function drop(ev) {
     console.log("drop ev");
-    //ev.preventDefault();
     var letterCellId = ev.dataTransfer.getData("text");
     var letterElement = document.getElementById(letterCellId);
     var letter = letterElement.innerText;
@@ -165,7 +164,13 @@ function drop(ev) {
     var copyElement = letterElement.cloneNode(true);
     copyElement.id = copyElement.id + xDimension + yDimension;
     copyElement.allowDrop = false;
+    copyElement.draggable = false;
+    copyElement.drop = false;
     ev.target.appendChild(copyElement);
+    
+    copyElement.parentElement.allowDrop = false;
+    copyElement.parentElement.draggable = false;
+    copyElement.parentElement.drop = false;
 
 
     if (letterCellId != "letter-opponent") {
