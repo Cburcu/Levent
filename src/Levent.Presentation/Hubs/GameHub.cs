@@ -30,12 +30,12 @@ namespace Levent.Presentation.Hubs
                 games.Add(game);
 
                 await Clients.Client(waitingUserId).SendAsync("StartGame",
-                    "Oyuna girildi. Hamle sırası sizde!",
+                    "Oyuna girildi. Rakibiniz " + playerName + ". Hamle sırası sizde!",
                     "turnOwner",
                     waitingUserName, playerName,
                     Game.LettersPoints);
                 await Clients.Client(Context.ConnectionId).SendAsync("StartGame",
-                    "Oyuna girildi. Hamle sırası rakipte.",
+                    "Oyuna girildi. Rakibiniz " + waitingUserName + ". Hamle sırası rakipte.",
                     "opponent",
                     waitingUserName, playerName,
                     Game.LettersPoints);
@@ -170,7 +170,7 @@ namespace Levent.Presentation.Hubs
         internal readonly string playerName;
         public readonly string playerConnectionId;
 
-        public int dimension = 8;
+        public int dimension = 6;
 
         public Game GameInstance { get; set; }
 
