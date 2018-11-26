@@ -21,6 +21,28 @@
             width: 40px;
             height: 40px;
         }
+
+        .table > tbody + tbody {
+            border-top: 3px solid #92a8d1;
+        }
+
+        .table-bordered {
+            border: 3px solid #92a8d1;
+        }
+
+            .table-bordered > thead > tr > th,
+            .table-bordered > tbody > tr > th,
+            .table-bordered > tfoot > tr > th,
+            .table-bordered > thead > tr > td,
+            .table-bordered > tbody > tr > td,
+            .table-bordered > tfoot > tr > td {
+                border: 3px solid #92a8d1;
+            }
+
+            .table-bordered > thead > tr > th,
+            .table-bordered > thead > tr > td {
+                border-bottom-width: 2px;
+            }
     </style>
 </head>
 <body>
@@ -42,8 +64,6 @@
             </div>
         </div>
     </nav>
-
-    <partial name="_CookieConsentPartial" />
 
     <div class="container body-content">
         @RenderBody()

@@ -5,8 +5,9 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/gameHub").build();
 // WaitingOpponent
 connection.on("WaitingOpponent", function (message) {
     var li = document.createElement("li");
+    var list = document.getElementById("messagesList");
     li.textContent = message;
-    document.getElementById("messagesList").appendChild(li);
+    list.insertBefore(li, list.childNodes[0]);
 });
 
 // Start Game
@@ -44,8 +45,9 @@ connection.on("StartGame", function (message, turnOwner, waitingUserName, player
         OpponentLetterGrid.style.display = "none";
     }
     var li = document.createElement("li");
+    var list = document.getElementById("messagesList");
     li.textContent = message;
-    document.getElementById("messagesList").appendChild(li);
+    list.insertBefore(li, list.childNodes[0]);
 });
 
 // Restart Game
@@ -67,9 +69,9 @@ connection.on("PlayOpponentLetter", function (message, opponentLetter, OpponentT
         OpponentLetterGrid.style.display = "none";
     }
     var li = document.createElement("li");
+    var list = document.getElementById("messagesList");
     li.textContent = message;
-    document.getElementById("messagesList").appendChild(li);
-
+    list.insertBefore(li, list.childNodes[0]);
 });
 
 connection.on("TurnOwnwer", function (message, TurnOwner) {
@@ -81,9 +83,9 @@ connection.on("TurnOwnwer", function (message, TurnOwner) {
         OpponentLetterGrid.style.display = "none";
     }
     var li = document.createElement("li");
+    var list = document.getElementById("messagesList");
     li.textContent = message;
-    document.getElementById("messagesList").appendChild(li);
-
+    list.insertBefore(li, list.childNodes[0]);
 });
 
 // Game is over
@@ -100,13 +102,13 @@ connection.on("GameIsOver", function (message, result) {
     document.getElementById("loserScore").innerText = result.loserScore;
 
     for (var i = 0; i < result.winnerMeaningfulWords.length; i++) {
-        var li = document.createElement("li");
-        li.textContent = result.winnerMeaningfulWords[i];
-        document.getElementById("winnerWords").appendChild(li);
+        var li1 = document.createElement("li");
+        li1.textContent = result.winnerMeaningfulWords[i];
+        document.getElementById("winnerWords").appendChild(li1);
     }
-    for (var i = 0; i < result.loserMeaningfulWords.length; i++) {
+    for (var j = 0; j < result.loserMeaningfulWords.length; j++) {
         var li = document.createElement("li");
-        li.textContent = result.loserMeaningfulWords[i];
+        li.textContent = result.loserMeaningfulWords[j];
         document.getElementById("loserWords").appendChild(li);
     }
 });
@@ -114,14 +116,16 @@ connection.on("GameIsOver", function (message, result) {
 // Exeption Messages
 connection.on("GridCellException", function (message) {
     var li = document.createElement("li");
+    var list = document.getElementById("messagesList");
     li.textContent = message;
-    document.getElementById("messagesList").appendChild(li);
+    list.insertBefore(li, list.childNodes[0]);
 });
 
 connection.on("IncorrectLetterException", function (message) {
     var li = document.createElement("li");
+    var list = document.getElementById("messagesList");
     li.textContent = message;
-    document.getElementById("messagesList").appendChild(li);
+    list.insertBefore(li, list.childNodes[0]);
 });
 
 // Start
@@ -167,13 +171,13 @@ function drop(ev) {
     copyElement.draggable = false;
     copyElement.drop = false;
     ev.target.appendChild(copyElement);
-    
+
     copyElement.parentElement.allowDrop = false;
     copyElement.parentElement.draggable = false;
     copyElement.parentElement.drop = false;
 
 
-    if (letterCellId != "letter-opponent") {
+    if (letterCellId !== "letter-opponent") {
         connection.invoke("Play", letter, xDimension, yDimension)
             .catch(function (err) {
                 return console.error(err.toString());
