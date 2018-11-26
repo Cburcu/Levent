@@ -16,7 +16,7 @@ connection.on("StartGame", function (message, turnOwner, waitingUserName, player
     for (var i in LettersPoints) {
         var tdPoint = document.createElement("td");
         tdPoint.align = "center";
-        tdPoint.style = "vertical-align: middle; width: 40px; height: 40px;";
+        tdPoint.style = "vertical-align: middle; width: 50px; height: 50px;";
         var point = LettersPoints[i];
         tdPoint.innerText = point;
         document.getElementById("TurnOwnerLettersPoints").appendChild(tdPoint);
@@ -26,7 +26,7 @@ connection.on("StartGame", function (message, turnOwner, waitingUserName, player
         tdLetter.innerText = i;
         tdLetter.id = "letter" + i;
         tdLetter.align = "center";
-        tdLetter.style = "vertical-align: middle; width: 40px; height: 40px;";
+        tdLetter.style = "vertical-align: middle; width: 50px; height: 50px;";
         tdLetter.draggable = "true";
         document.getElementById("TurnOwnerLetters").appendChild(tdLetter);
         tdLetter.addEventListener('dragstart', function drag(ev) {

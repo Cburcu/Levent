@@ -263,10 +263,13 @@ namespace Levent.Engine
                 {
                     char c = grid[i, j];
                     word += c.ToString();
+                }
 
-                    if (Words.Contains(word))
+                foreach (var item in Words)
+                {
+                    if (word.Contains(item) && item != "")
                     {
-                        meaningfulwords.Add(word);
+                        meaningfulwords.Add(item);
                     }
                 }
 
@@ -279,10 +282,13 @@ namespace Levent.Engine
                 {
                     char c = grid[j, i];
                     word += c.ToString();
+                }
 
-                    if (Words.Contains(word))
+                foreach (var item in Words)
+                {
+                    if (word.Contains(item) && item != "")
                     {
-                        meaningfulwords.Add(word);
+                        meaningfulwords.Add(item);
                     }
                 }
 
