@@ -5,9 +5,7 @@ VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Levent.Engine", "Levent.Engine\Levent.Engine.csproj", "{8EC57D2E-5F51-41D1-8A27-54B6D961C518}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Levent.Demo", "Levent.Demo\Levent.Demo.csproj", "{6AB0515F-D9FB-4879-AB0D-EF6AA2D1A484}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Levent.Presentation", "Levent.Presentation\Levent.Presentation.csproj", "{0CF31D60-042C-4554-881C-6553160DE960}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Levent.Presentation", "Levent.Presentation\Levent.Presentation.csproj", "{0CF31D60-042C-4554-881C-6553160DE960}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,10 +17,6 @@ Global
 		{8EC57D2E-5F51-41D1-8A27-54B6D961C518}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8EC57D2E-5F51-41D1-8A27-54B6D961C518}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8EC57D2E-5F51-41D1-8A27-54B6D961C518}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6AB0515F-D9FB-4879-AB0D-EF6AA2D1A484}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6AB0515F-D9FB-4879-AB0D-EF6AA2D1A484}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6AB0515F-D9FB-4879-AB0D-EF6AA2D1A484}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6AB0515F-D9FB-4879-AB0D-EF6AA2D1A484}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0CF31D60-042C-4554-881C-6553160DE960}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0CF31D60-042C-4554-881C-6553160DE960}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CF31D60-042C-4554-881C-6553160DE960}.Release|Any CPU.ActiveCfg = Release|Any CPU
