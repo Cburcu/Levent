@@ -83,7 +83,7 @@ namespace Levent.Presentation.Hubs
                     .SendAsync("PlayOpponentLetter", "Hamle sırası sizde! Lütfen " + letter + " harfini kullanın. ", letter, "OpponentTurn");
 
                 await Clients.Client(turnOwnerConnectionId)
-                    .SendAsync("PlayOpponentLetter", "Hamle sırası rakipte!", letter, "TurnOwner");
+                    .SendAsync("PlayOpponentLetter", game.GameInstance.GetOpponent().Username + " 'in hamle sırası!", letter, "TurnOwner");
             }
             catch (IncorrectLetterException exc)
             {
@@ -147,7 +147,7 @@ namespace Levent.Presentation.Hubs
                     await Clients.Client(turnOwnerConnectionId)
                         .SendAsync("TurnOwnwer", "Hamle sırası sizde!", "TurnOwner");
                     await Clients.Client(opponentConnectionId)
-                        .SendAsync("TurnOwnwer", "Hamle sırası rakipte!", "Opponent");
+                        .SendAsync("TurnOwnwer", game.GameInstance.TurnOwner.Username + " 'in hamle sırası!", "Opponent");
                 }
             }
             catch (GridCellException e)
